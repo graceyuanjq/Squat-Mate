@@ -1,0 +1,63 @@
+//Squat Mate by Grace Yuan
+//Jan 2021, Body-Centric Technology course @ OCAD University
+//Acceleometer code based on Marshall Taylor @ SparkFun Electronics
+//https://github.com/sparkfun/LSM6DS3_Breakout
+//https://github.com/sparkfun/SparkFun_LSM6DS3_Arduino_Library
+
+#include "SparkFunLSM6DS3.h"
+#include "Wire.h"
+
+int ledPins[] = {6,7,8};
+int ledTotal = sizeof(ledPins) / sizeof(int);
+LSM6DS3 myIMU(I2C_MODE, 0x6A); 
+
+void setup() {
+  for(int i=0;i<ledTotal;i++) 
+{
+pinMode(ledPins[i],OUTPUT);  
+}
+  Serial.begin(9600);
+  Serial.println("Processor came out of reset.\n");
+  
+  myIMU.begin();
+  
+}
+
+
+void loop()
+{
+//  Serial.print("\nAccelerometer:\n");
+//  Serial.print(" X = ");
+//  Serial.println(myIMU.readFloatAccelX(), 0);
+//  Serial.print(" Y = ");
+//  Serial.println(myIMU.readFloatAccelY(), 0);
+//  Serial.print(" Z = ");
+//  Serial.println(myIMU.readFloatAccelZ(), 0);
+
+  Serial.print("\nGyroscope:\n");
+  Serial.print(" X = ");
+  Serial.println(myIMU.readFloatGyroX(), 0);
+  Serial.print(" Y = ");
+  Serial.println(myIMU.readFloatGyroY(), 0);
+  Serial.print(" Z = ");
+  Serial.println(myIMU.readFloatGyroZ(), 0);
+  
+  delay(500);
+  if (myIMU.readFloatGyroY()<=50){
+    digitalWrite(8,1000);
+    digitalWrite(7,0);
+    digitalWrite(6,0);  
+  } else if (myIMU.readFloatGyroY()>50 && myIMU.readFloatGyroY()<=250){
+    digitalWrite(7,1000);
+    digitalWrite(8,0);
+    digitalWrite(6,0);
+  } else if (myIMU.readFloatGyroY()>250){
+    digitalWrite(6,1000);
+    digitalWrite(8,0);
+    digitalWrite(7,0);
+  } else {
+    digitalWrite(8,0);
+    digitalWrite(7,0);
+    digitalWrite(6,0);
+  }
+}
